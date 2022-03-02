@@ -2,6 +2,35 @@
 [![Actions Status](https://github.com/gnosis/safe-client-gateway/workflows/safe-client-gateway/badge.svg?branch=main)](https://github.com/gnosis/safe-client-gateway/actions)
 [![Coverage Status](https://coveralls.io/repos/github/gnosis/safe-client-gateway/badge.svg)](https://coveralls.io/github/gnosis/safe-client-gateway)
 
+# Profiles and Features
+
+All features should be tested on `staging` therefore when introducing a new feature, add it to the default feature list like so:
+
+```toml
+[features]
+default = ["dashboard"]
+dashboard = []
+```
+
+This allows us to generate `dev`/`test` profile builds, meant for `staging` by simply running:
+
+```bash
+cargo build
+``` 
+By the same token, if we want a `production` build, we would need to generate like so:
+
+```bash
+cargo build --release --no-default-features
+```
+
+Once a feature is tested thoroughly, it can be removed from the default array of features, namely:
+```toml
+[features]
+default = [...]
+```
+
+This would automatically enable the build in `production` if the we ever adjust our GitHub workflow. 
+
 ## Motivation
 
 This project is a gateway between the Safe clients ([Android](https://github.com/gnosis/safe-android)/ [iOS](https://github.com/gnosis/safe-ios)/ [web](https://github.com/gnosis/safe-react)) and the Safe backend services ([transaction service](https://github.com/gnosis/safe-transaction-service) and Ethereum nodes). It is providing a more UI-oriented mapping and multi-sourced data structures for ease of integration and rendering.
