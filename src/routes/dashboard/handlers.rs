@@ -53,12 +53,14 @@ pub async fn get_dashboard(
             DashboardUiComponent::Safe(safe_state)
         }),
         safe_apps.map_or(DashboardUiComponent::ErrorLoadingComponent, |safe_apps| {
-            DashboardUiComponent::SafeApps(safe_apps)
+            DashboardUiComponent::SafeApps { safe_apps }
         }),
         collectibles.map_or(
             DashboardUiComponent::ErrorLoadingComponent,
-            |collectibles| match RawValue::from_string(collectibles.0) {
-                Ok(json) => DashboardUiComponent::Collectibles(json),
+            |collectibles| match RawValue::from_string(collectibles.0.to_string()) {
+                Ok(json) => DashboardUiComponent::Collectibles {
+                    json: json.to_string(),
+                },
                 Err(_) => DashboardUiComponent::ErrorLoadingComponent,
             },
         ),
@@ -68,15 +70,15 @@ pub async fn get_dashboard(
         pending_txs.map_or(
             DashboardUiComponent::ErrorLoadingComponent,
             |pending_tx_page| {
-                let pending_txs = pending_tx_page.results;
-                DashboardUiComponent::PendingTxs(pending_txs)
+                let transactions = pending_tx_page.results;
+                DashboardUiComponent::PendingTxs { transactions }
             },
         ),
         history_txs.map_or(
             DashboardUiComponent::ErrorLoadingComponent,
             |history_txs_page| {
-                let history_txs = history_txs_page.results;
-                DashboardUiComponent::HistoryTxs(history_txs)
+                let transactions = history_txs_page.results;
+                DashboardUiComponent::HistoryTxs { transactions }
             },
         ),
     ])

@@ -5,14 +5,22 @@ use crate::routes::transactions::models::summary::TransactionListItem;
 use serde::Serialize;
 use serde_json::value::RawValue;
 
-#[derive(Serialize)]
-#[serde(tag = "type", content = "content")]
+#[derive(Serialize, Debug)]
+#[serde(tag = "type")]
 pub enum DashboardUiComponent {
-    HistoryTxs(Vec<TransactionListItem>),
-    PendingTxs(Vec<TransactionListItem>),
+    HistoryTxs {
+        transactions: Vec<TransactionListItem>,
+    },
+    PendingTxs {
+        transactions: Vec<TransactionListItem>,
+    },
     Balances(Balances),
-    SafeApps(Vec<SafeApp>),
+    SafeApps {
+        safe_apps: Vec<SafeApp>,
+    },
     Safe(SafeState),
-    Collectibles(Box<RawValue>),
+    Collectibles {
+        json: String, // unfortunately we don't have a type yet for Collectibles
+    },
     ErrorLoadingComponent,
 }
