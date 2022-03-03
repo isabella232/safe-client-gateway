@@ -23,4 +23,7 @@ pub enum DashboardUiComponent {
         json: String, // unfortunately we don't have a type yet for Collectibles
     },
     ErrorLoadingComponent,
+    SectionTitle {
+        value: String,
+    },
 }

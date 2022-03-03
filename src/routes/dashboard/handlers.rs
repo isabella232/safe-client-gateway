@@ -49,12 +49,21 @@ pub async fn get_dashboard(
     );
     // our approach is defensive if a single component errors, we still return those which don't
     Ok(vec![
+        DashboardUiComponent::SectionTitle {
+            value: String::from("Safe Details"),
+        },
         safe_state.map_or(DashboardUiComponent::ErrorLoadingComponent, |safe_state| {
             DashboardUiComponent::Safe(safe_state)
         }),
+        DashboardUiComponent::SectionTitle {
+            value: String::from("Safe Apps available in this Chain"),
+        },
         safe_apps.map_or(DashboardUiComponent::ErrorLoadingComponent, |safe_apps| {
             DashboardUiComponent::SafeApps { safe_apps }
         }),
+        DashboardUiComponent::SectionTitle {
+            value: String::from("Collectibles"),
+        },
         collectibles.map_or(
             DashboardUiComponent::ErrorLoadingComponent,
             |collectibles| match RawValue::from_string(collectibles.0.to_string()) {
@@ -64,9 +73,15 @@ pub async fn get_dashboard(
                 Err(_) => DashboardUiComponent::ErrorLoadingComponent,
             },
         ),
+        DashboardUiComponent::SectionTitle {
+            value: String::from("Balances"),
+        },
         balances.map_or(DashboardUiComponent::ErrorLoadingComponent, |balances| {
             DashboardUiComponent::Balances(balances)
         }),
+        DashboardUiComponent::SectionTitle {
+            value: String::from("Transactions awaiting signatures or execution"),
+        },
         pending_txs.map_or(
             DashboardUiComponent::ErrorLoadingComponent,
             |pending_tx_page| {
@@ -74,6 +89,9 @@ pub async fn get_dashboard(
                 DashboardUiComponent::PendingTxs { transactions }
             },
         ),
+        DashboardUiComponent::SectionTitle {
+            value: String::from("Most recent executed transactions"),
+        },
         history_txs.map_or(
             DashboardUiComponent::ErrorLoadingComponent,
             |history_txs_page| {
